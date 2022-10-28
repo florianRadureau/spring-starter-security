@@ -1,4 +1,4 @@
-package projet.wcs.starter.Configurations;
+package projet.wcs.starter.models;
 
 import java.util.List;
 

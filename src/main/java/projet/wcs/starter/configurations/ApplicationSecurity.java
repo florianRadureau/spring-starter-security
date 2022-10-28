@@ -1,4 +1,4 @@
-package projet.wcs.starter.Configurations;
+package projet.wcs.starter.configurations;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,27 +14,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import projet.wcs.starter.Repositories.UserRepository;
+import projet.wcs.starter.repositories.UserRepository;
+import projet.wcs.starter.services.UserDetailsServiceImpl;
 
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity()
 public class ApplicationSecurity {
 
     @Autowired private UserRepository userRepo;
     @Autowired private JwtTokenFilter jwtTokenFilter;
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new UserDetailsService() {
-
-            @Override
-            public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                return userRepo.findByEmail(username)
-                        .orElseThrow(
-                                () -> new UsernameNotFoundException("User " + username + " not found"));
-            }
-        };
-    }
+    @Autowired private UserDetailsServiceImpl userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -54,7 +43,7 @@ public class ApplicationSecurity {
         http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                 authorizationManagerRequestMatcherRegistry
                         .requestMatchers(request -> {
-                            if(request.getRequestURI().contains("/auth/login") ||
+                            if(request.getRequestURI().contains("/auth/") ||
                                 request.getRequestURI().contains("docs/") ||
                                 request.getRequestURI().contains("/users")) {
                                 System.out.println("toto");

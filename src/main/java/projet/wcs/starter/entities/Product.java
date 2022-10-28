@@ -1,4 +1,4 @@
-package projet.wcs.starter.Entities;
+package projet.wcs.starter.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

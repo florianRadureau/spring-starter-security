@@ -1,4 +1,4 @@
-package projet.wcs.starter.Configurations;
+package projet.wcs.starter.models;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
