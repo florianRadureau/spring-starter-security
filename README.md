@@ -2,7 +2,7 @@
 # Starter Spring Security
 ## Introduction
 
-Ce starter vous servira à démarrer un projet Spring avec le sécurité déjà implémentée. Nous utilisons des tokens JWT de type Bearer.
+Ce starter vous servira à démarrer un projet Spring avec la sécurité déjà implémentée. Nous utilisons des tokens JWT de type Bearer.
 
 
 ## Routes
