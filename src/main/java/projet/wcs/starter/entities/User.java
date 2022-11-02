@@ -2,11 +2,8 @@ package projet.wcs.starter.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.lang.Nullable;
-import projet.wcs.starter.models.ERole;
 import projet.wcs.starter.models.Role;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
