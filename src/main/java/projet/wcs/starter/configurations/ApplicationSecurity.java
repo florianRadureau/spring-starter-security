@@ -1,24 +1,26 @@
 package projet.wcs.starter.configurations;
 
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import projet.wcs.starter.repositories.UserRepository;
 import projet.wcs.starter.services.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity()
+@EnableMethodSecurity(
+        securedEnabled = true
+)
 public class ApplicationSecurity {
 
     @Autowired private UserRepository userRepo;
@@ -42,28 +44,9 @@ public class ApplicationSecurity {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                 authorizationManagerRequestMatcherRegistry
-                        .requestMatchers(request -> {
-                            if(request.getRequestURI().contains("/auth/") ||
-                                request.getRequestURI().contains("docs/") ||
-                                request.getRequestURI().contains("/users")) {
-                                System.out.println("toto");
-                                return true;
-                            }
-                            System.out.println(request.getRequestURI());
-                            return false;
-                        }).permitAll()
+                        .requestMatchers(request -> request.getRequestURI().contains("/auth/")).permitAll()
                         .anyRequest().authenticated()
         );
-
-        http.exceptionHandling()
-                .authenticationEntryPoint(
-                        (request, response, ex) -> {
-                            response.sendError(
-                                    HttpServletResponse.SC_NOT_ACCEPTABLE,
-                                    ex.getMessage()
-                            );
-                        }
-                );
 
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
 

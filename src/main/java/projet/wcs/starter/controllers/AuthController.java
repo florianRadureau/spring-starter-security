@@ -44,11 +44,13 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        String jwt = jwtUtil.generateJwtToken(userDetails);
 
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
+
+        String jwt = jwtUtil.generateJwtToken(userDetails, roles);
+
 
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
@@ -68,7 +70,7 @@ public class AuthController {
                 .map(refreshTokenService::verifyExpiration)
                 .map(RefreshToken::getUser)
                 .map(user -> {
-                    String token = jwtUtil.generateTokenFromUsername(user.getEmail());
+                    String token = jwtUtil.generateTokenFromUsername(user.getEmail(), user.getRoles().stream().map(Object::toString).toList());
                     return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
                 })
                 .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,

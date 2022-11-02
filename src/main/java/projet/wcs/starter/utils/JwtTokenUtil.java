@@ -4,29 +4,35 @@ import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
-
+import projet.wcs.starter.models.Role;
 import projet.wcs.starter.services.UserDetailsImpl;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenUtil {
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenUtil.class);
 
-    @Value("${starter.app.jwtSecret:secret}")
+    @Value("${starter.app.jwtSecret}")
     private String jwtSecret;
 
-    @Value("${starter.app.jwtExpirationMs:30000}")
+    @Value("${starter.app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
-    public String generateJwtToken(UserDetailsImpl userPrincipal) {
-        return generateTokenFromUsername(userPrincipal.getUsername());
+    public String generateJwtToken(UserDetailsImpl userPrincipal, List<String> roles) {
+        return generateTokenFromUsername(userPrincipal.getUsername(), roles);
     }
 
-    public String generateTokenFromUsername(String username) {
-        return Jwts.builder().setSubject(username).setIssuedAt(new Date())
+    public String generateTokenFromUsername(String username, List<String> roles) {
+        Map<String, Object> customClaimRoles = new HashMap<String, Object>();
+        customClaimRoles.put("roles", roles);
+        return Jwts.builder().addClaims(customClaimRoles).setSubject(username).setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs)).signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
