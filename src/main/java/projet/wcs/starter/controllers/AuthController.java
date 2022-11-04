@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin
 public class AuthController {
     @Autowired AuthenticationManager authManager;
     @Autowired JwtTokenUtil jwtUtil;

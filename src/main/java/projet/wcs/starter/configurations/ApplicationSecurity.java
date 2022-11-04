@@ -44,7 +44,10 @@ public class ApplicationSecurity {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                 authorizationManagerRequestMatcherRegistry
-                        .requestMatchers(request -> request.getRequestURI().contains("/auth/")).permitAll()
+                        .requestMatchers(
+                                request -> request.getMethod().equals("OPTIONS")
+                                        || request.getRequestURI().contains("/auth/")
+                        ).permitAll()
                         .anyRequest().authenticated()
         );
 
