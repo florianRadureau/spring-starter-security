@@ -50,6 +50,8 @@ GET /users
 Ceci est un projet gradle. Faites attention de bien charger le projet et d'installer les dépendances.
 Pour faire fonctionner ce starter, vous devez avoir une base MySQL fonctionnelle. Vous pouvez lancer le docker compose situé à la racine du projet ou faire tourner MySQL en local. Vous appelez votre base comme vous le souhaitez, pour l'exemple ce sera 'starter'.
 
+**Attention** il faut absolument ajouter 2 rôles en BDD dans la table roles : "ROLE_USER" et "ROLE_ADMIN".
+
 Vous devrez créer un fichier application.properties dans les resources. Voici un exemple fonctionnel :
 
     spring.datasource.url=jdbc:mysql://localhost:3306/starter
