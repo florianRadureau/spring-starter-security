@@ -42,6 +42,8 @@ POST /products
 
 GET /products
 
+GET /users/me
+
 **Avec authentification** disponible avec le ROLE_ADMIN :
 
 GET /users
