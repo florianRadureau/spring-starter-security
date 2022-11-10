@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import projet.wcs.starter.entities.User;
+import projet.wcs.starter.dao.User;
 import projet.wcs.starter.repositories.UserRepository;
 
 @Service

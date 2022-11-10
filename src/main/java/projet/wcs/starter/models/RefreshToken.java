@@ -1,7 +1,7 @@
 package projet.wcs.starter.models;
 
 import jakarta.persistence.*;
-import projet.wcs.starter.entities.User;
+import projet.wcs.starter.dao.User;
 
 import java.time.Instant;
 

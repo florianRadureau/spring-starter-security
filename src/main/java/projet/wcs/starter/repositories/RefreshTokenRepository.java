@@ -3,7 +3,7 @@ package projet.wcs.starter.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
-import projet.wcs.starter.entities.User;
+import projet.wcs.starter.dao.User;
 import projet.wcs.starter.models.RefreshToken;
 
 import java.util.Optional;

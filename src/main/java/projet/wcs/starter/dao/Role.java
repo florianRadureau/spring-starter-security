@@ -1,6 +1,7 @@
-package projet.wcs.starter.models;
+package projet.wcs.starter.dao;
 
 import jakarta.persistence.*;
+import projet.wcs.starter.models.ERole;
 
 @Entity
 @Table(name = "roles")

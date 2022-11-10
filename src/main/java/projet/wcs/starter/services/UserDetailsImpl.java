@@ -10,7 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import projet.wcs.starter.entities.User;
+import projet.wcs.starter.dao.User;
 
 public class UserDetailsImpl implements UserDetails {
     @Serial

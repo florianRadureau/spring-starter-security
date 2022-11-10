@@ -1,11 +1,14 @@
 package projet.wcs.starter.controllers;
 
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import projet.wcs.starter.entities.Product;
+import projet.wcs.starter.dao.Product;
+import projet.wcs.starter.dto.ProductDto;
 import projet.wcs.starter.repositories.ProductRepository;
+import projet.wcs.starter.services.UserDetailsImpl;
 
 import java.net.URI;
 import java.util.List;
@@ -17,15 +20,23 @@ public class ProductController {
 
     @Autowired private ProductRepository repo;
 
+    @Autowired private ModelMapper modelMapper;
+
     @PostMapping
-    public ResponseEntity<Object> create(@RequestBody @Valid Product product) {
-        Product savedProduct = repo.save(product);
-        URI productURI = URI.create("/products/" + savedProduct.getId());
-        return ResponseEntity.created(productURI).body(savedProduct);
+    public ProductDto create(@RequestBody @Valid ProductDto product) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        product.setOwnerId(userDetails.getId());
+
+        Product savedProduct = repo.save(modelMapper.map(product, Product.class));
+        return modelMapper.map(savedProduct, ProductDto.class);
     }
 
     @GetMapping
-    public List<Product> list() {
-        return repo.findAll();
+    public List<ProductDto> list() {
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return repo.findAllByOwnerId(userDetails.getId())
+                .stream()
+                .map(p -> modelMapper.map(p, ProductDto.class))
+                .toList();
     }
 }
