@@ -1,9 +1,13 @@
 package projet.wcs.starter.dto;
 
+import jakarta.persistence.Lob;
+
 public class UserDto {
     private String uri;
     private int id;
     private String email;
+    @Lob
+    private String profilePicture;
 
     public String getUri() {
         return "/users/".concat(String.valueOf(this.id));
@@ -23,5 +27,13 @@ public class UserDto {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 }

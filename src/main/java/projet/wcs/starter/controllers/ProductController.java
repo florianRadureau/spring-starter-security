@@ -10,8 +10,9 @@ import projet.wcs.starter.dto.ProductDto;
 import projet.wcs.starter.repositories.ProductRepository;
 import projet.wcs.starter.services.UserDetailsImpl;
 
-import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/products")
@@ -34,9 +35,10 @@ public class ProductController {
     @GetMapping
     public List<ProductDto> list() {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return repo.findAllByOwnerId(userDetails.getId())
-                .stream()
+        Optional<List<Product>> optionalProducts = repo.findAllByOwnerId(userDetails.getId());
+        return optionalProducts.map(products -> products.stream()
                 .map(p -> modelMapper.map(p, ProductDto.class))
-                .toList();
+                .toList()).orElseGet(ArrayList::new);
+
     }
 }

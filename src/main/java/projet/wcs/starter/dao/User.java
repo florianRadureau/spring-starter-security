@@ -3,6 +3,7 @@ package projet.wcs.starter.dao;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
 @Entity
@@ -25,6 +26,10 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Set<Role> roles;
+
+    @Lob
+    @Column(columnDefinition = "MEDIUMBLOB")
+    private byte[] profilePicture;
 
     public String getEmail() {
         return email;
@@ -63,5 +68,17 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public byte[] getProfilePicture() {
+        return profilePicture;
+    }
+
+    public String getProfilePictureString() {
+        return new String(profilePicture, StandardCharsets.UTF_8);
+    }
+
+    public void setProfilePicture(byte[] profilePicture) {
+        this.profilePicture = profilePicture;
     }
 }

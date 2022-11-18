@@ -1,20 +1,19 @@
 package projet.wcs.starter.controllers;
 
+import jakarta.validation.Valid;
+import org.hibernate.ObjectNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import projet.wcs.starter.dao.User;
 import projet.wcs.starter.dto.UserDto;
 import projet.wcs.starter.repositories.UserRepository;
 import projet.wcs.starter.services.UserDetailsImpl;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin
@@ -31,15 +30,34 @@ public class UserController {
     public List<UserDto> list() {
         return repo.findAll().stream().map(
                 user -> modelMapper.map(user, UserDto.class)
-        ).collect(Collectors.toList());
+        ).toList();
     }
 
     @GetMapping("/me")
     public UserDto me() {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = repo.findById(userDetails.getId()).get();
-        UserDto userDto = modelMapper.map(user, UserDto.class);
-        return userDto;
+        Optional<User> user = repo.findById(userDetails.getId());
+        if (user.isPresent()) {
+            return modelMapper.map(user, UserDto.class);
+        } else {
+            throw new ObjectNotFoundException(userDetails.getId(), "User");
+        }
+    }
+
+    @PutMapping("/me")
+    public UserDto updateMe(@RequestBody @Valid UserDto userDto) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<User> optionalUser = repo.findById(userDetails.getId());
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setProfilePicture(userDto.getProfilePicture().getBytes());
+            user.setEmail(userDto.getEmail());
+            user = repo.save(user);
+            return modelMapper.map(user, UserDto.class);
+        } else {
+            throw new ObjectNotFoundException(userDetails.getId(), User.class.toGenericString());
+        }
+
     }
 
 
